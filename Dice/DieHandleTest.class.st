@@ -10,6 +10,19 @@ Class {
 }
 
 { #category : 'tests' }
+DieHandleTest >> testAddingDieHandleAndDie [
+
+	| hd |
+	hd := DieHandle new.
+	hd addDie: (Die withFaces: 6).
+	hd addDie: (Die withFaces: 6).
+
+	hd := hd + (Die withFaces: 6).
+	
+	self assert: hd dice size equals: 3
+]
+
+{ #category : 'tests' }
 DieHandleTest >> testAddingTwiceTheSameDice [
 
 	| handle |
@@ -64,7 +77,20 @@ DieHandleTest >> testSumOfHandles [
 ]
 
 { #category : 'tests' }
-DieHandleTest >> testSumming [
+DieHandleTest >> testSummingDieHandleAndDie [
+
+	| hd |
+	hd := DieHandle new.
+	hd addDie: (Die withFaces: 6).
+	hd addDie: (Die withFaces: 6).
+
+	hd := hd sumwithDie: (Die withFaces: 6).
+
+	self assert: hd dice size equals: 3
+]
+
+{ #category : 'tests' }
+DieHandleTest >> testSummingTwoDieHandle [
 
 	| handle |
 	handle := 2 D20 + 3 D10.

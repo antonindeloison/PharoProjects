@@ -18,6 +18,12 @@ Die class >> withFaces: aNumber [
 	^ instance
 ]
 
+{ #category : 'arithmetic' }
+Die >> + aDicable [
+
+	^ aDicable sumwithDie: self
+]
+
 { #category : 'accessing' }
 Die >> faces [
 	^ faces
@@ -47,4 +53,23 @@ Die >> printOn: aStream [
 Die >> roll [
 
 	^ (1 to: faces) atRandom
+]
+
+{ #category : 'as yet unclassified' }
+Die >> sumWithDieHandle: aDieHandle [
+
+	| hd |
+	hd := DieHandle new.
+	aDieHandle dice do: [ :each | hd addDie: each ].
+	hd addDie: self.
+	^ hd
+]
+
+{ #category : 'as yet unclassified' }
+Die >> sumwithDie: arg [
+
+	^ DieHandle new
+		addDie: self;
+		addDie: arg;
+		yourself
 ]

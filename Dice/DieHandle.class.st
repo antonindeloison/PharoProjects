@@ -10,13 +10,9 @@ Class {
 }
 
 { #category : 'arithmetic' }
-DieHandle >> + aDieHandle [ 
-	|newHandle|
-	newHandle := DieHandle new.
-	dice do: [ :each | newHandle addDie: each ].
-	aDieHandle dice do: [ :each | newHandle addDie: each ].
-	^ newHandle 
-	
+DieHandle >> + arg [
+
+	^ arg sumWithDieHandle: self.
 ]
 
 { #category : 'adding' }
@@ -53,10 +49,22 @@ DieHandle >> roll [
 	^ sum
 ]
 
-{ #category : 'tests' }
-DieHandle >> testSumming [
+{ #category : 'as yet unclassified' }
+DieHandle >> sumWithDieHandle: aDieHandle [
 
-	| handle |
-	handle := 2 D20 + 3 D10.
-	self assert: handle diceNumber equals: 5
+	| newHandle |
+	newHandle := DieHandle new.
+	dice do: [ :each | newHandle addDie: each ].
+	aDieHandle dice do: [ :each | newHandle addDie: each ].
+	^ newHandle
+]
+
+{ #category : 'as yet unclassified' }
+DieHandle >> sumwithDie: arg [
+
+	| hd |
+	hd := DieHandle new.
+	self dice do: [ :each | hd addDie: each ].
+	hd addDie: arg.
+	^ hd.
 ]
