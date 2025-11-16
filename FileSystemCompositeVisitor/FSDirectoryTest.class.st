@@ -159,19 +159,22 @@ FSDirectoryTest >> testSearchByContentsIsOkWithNotMatchedName [
 { #category : 'tests' }
 FSDirectoryTest >> testSearchByContentsIsOkWithOneFile [
 
-	| directory file res visitor|
-	
-		visitor := SearchByContentVisitor new.
+	| directory file res visitor |
+	visitor := SearchByContentVisitor new.
 	visitor searchString: 'File1'.
-	
+
 	directory := FSDirectory new.
 	file := FSFile new.
 	file content: 'File1'.
+
+
+	directory add: (FSSymLinks new target: file).
+	directory add: (FSZipFile new content: 'File1').
 	directory add: file.
 
 	res := visitor visit: directory.
 
-	self assert: res size equals: 1
+	self assert: res size equals: 3
 ]
 
 { #category : 'tests' }
@@ -449,19 +452,73 @@ FSDirectoryTest >> testSearchByNameIsOkWithOneFile [
 { #category : 'tests' }
 FSDirectoryTest >> testSearchByNameIsOkWithPrefixFile [
 
-| directory file visitor res |
-visitor := SearchByNameVisitor new.
-visitor searchString: 'Fi'.
+	| directory file visitor res |
+	visitor := SearchByNameVisitor new.
+	visitor searchString: 'Fi'.
 
-directory := FSDirectory new.
-directory name: 'Dir1'.
+	directory := FSDirectory new.
+	directory name: 'Dir1'.
 
-file := FSFile new.
-file name: 'File1'.
-directory add: file.
+	file := FSFile new.
+	file name: 'File1'.
+	
+	directory add: (FSSymLinks new target: file).
+	directory add: (FSZipFile new name: 'File').
+	directory add: file.
 
-res := visitor visit: directory.
+	res := visitor visit: directory.
 
-self assert: res size equals: 1.
+	self assert: res size equals: 3
+]
 
+{ #category : 'tests' }
+FSDirectoryTest >> testSizeVisitorIsOk [
+
+	| visitor directory file res |
+	visitor := SizeVisitor new.
+
+	directory := FSDirectory new.
+	directory name: 'tttt'.
+
+	file := FSFile new.
+	file name: 'rrrr'.
+	file content: 'coucou'.
+
+	directory add: file.
+
+	res := visitor visit: directory.
+
+	self assert: res equals: 6
+]
+
+{ #category : 'tests' }
+FSDirectoryTest >> testSizeVisitorIsOkWithManyFilesAndDirectory [
+
+	| visitor directory directory2 res file zip|
+	visitor := SizeVisitor new.
+
+	directory := FSDirectory new.
+	directory2 := FSDirectory new.
+
+	directory add: (FSFile new content: 'coucou').
+	directory add: (FSFile new content: 'Hello').
+	directory add: (FSFile new content: 'Bonjour').
+
+	file := FSFile new content: 'coucou'.
+	directory2 add: (file).
+	directory2 add: (FSFile new content: 'Hello').
+	directory2 add: (FSFile new content: 'Bonjour').
+	
+	directory2 add: (FSSymLinks new target: file).
+	zip := FSZipFile new content: 'coucou'.
+	zip add: file.
+	directory2 add: (zip).
+
+
+
+	directory add: directory2.
+
+	res := visitor visit: directory.
+
+	self assert: res equals: 54
 ]

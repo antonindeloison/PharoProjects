@@ -38,3 +38,15 @@ SearchVisitor >> visitFSFile: aFile [
 
 	^ self subclassResponsibility
 ]
+
+{ #category : 'visiting' }
+SearchVisitor >> visitSymLinks: aSymLinks [
+
+	^ self subclassResponsibility
+]
+
+{ #category : 'visiting' }
+SearchVisitor >> visitZipFile: aZipFile [
+
+	^ self subclassResponsibility .
+]

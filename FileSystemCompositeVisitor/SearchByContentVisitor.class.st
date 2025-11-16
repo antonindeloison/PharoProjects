@@ -44,3 +44,28 @@ SearchByContentVisitor >> visitFSFile: aFile [
 
 	^ matchedChild
 ]
+
+{ #category : 'visiting' }
+SearchByContentVisitor >> visitSymLinks: aSymlinks [
+
+	|childmatch|
+	childmatch := aSymlinks target acceptVisitor: self.
+	^ childmatch .
+]
+
+{ #category : 'visiting' }
+SearchByContentVisitor >> visitZipFile: aZipFile [
+
+	| matchedChild |
+	matchedChild := OrderedCollection new.
+	
+		(aZipFile content beginsWith: searchString) ifTrue: [
+		matchedChild add: aZipFile ].
+
+	aZipFile children do: [ :child |
+			| childMatch |
+			childMatch := child acceptVisitor: self.
+			matchedChild addAll: childMatch ].
+
+	^ matchedChild
+]
